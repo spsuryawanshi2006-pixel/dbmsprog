@@ -1,0 +1,81 @@
+CREATE DATABASE SalesDB;
+
+
+USE SalesDB;
+
+
+CREATE TABLE Sales (
+    SaleID INT PRIMARY KEY,
+    ProductName VARCHAR(100),
+    Category VARCHAR(50),
+    Quantity INT,
+    Price DECIMAL(10,2)
+);
+
+
+INSERT INTO Sales VALUES
+(1, 'Laptop', 'Electronics', 2, 55000),
+(2, 'Mobile', 'Electronics', 5, 20000),
+(3, 'Headphones', 'Electronics', 10, 1500),
+(4, 'Shirt', 'Clothing', 8, 1200),
+(5, 'Jeans', 'Clothing', 5, 2000),
+(6, 'Shoes', 'Footwear', 6, 3000),
+(7, 'Sandals', 'Footwear', 10, 800),
+(8, 'Rice Bag', 'Groceries', 20, 900),
+(9, 'Oil Can', 'Groceries', 15, 1500);
+
+
+SELECT 'SALES TABLE' AS INFO;
+
+SELECT * FROM Sales;
+
+
+SELECT Category,
+       SUM(Quantity) AS Total_Quantity_Sold
+FROM Sales
+GROUP BY Category;
+
+SELECT Category,
+       AVG(Price) AS Average_Price
+FROM Sales
+GROUP BY Category;
+
+SELECT Category,
+       MAX(Price) AS Maximum_Price,
+       MIN(Price) AS Minimum_Price
+FROM Sales
+GROUP BY Category;
+
+
+SELECT Category,
+       SUM(Quantity * Price) AS Total_Sales_Amount
+FROM Sales
+GROUP BY Category;
+
+
+SELECT Category,
+       COUNT(ProductName) AS Number_Of_Products
+FROM Sales
+GROUP BY Category;
+
+
+SELECT Category,
+       SUM(Quantity * Price) AS Total_Sales
+FROM Sales
+GROUP BY Category
+HAVING SUM(Quantity * Price) > 5000;
+
+
+SELECT Category,
+       AVG(Price) AS Average_Price
+FROM Sales
+GROUP BY Category
+HAVING AVG(Price) > 1000;
+
+
+SELECT Category,
+       SUM(Quantity * Price) AS Highest_Total_Sales
+FROM Sales
+GROUP BY Category
+ORDER BY Highest_Total_Sales DESC
+LIMIT 1;
