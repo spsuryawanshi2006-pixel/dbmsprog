@@ -1,0 +1,248 @@
+// =====================================================
+// Student Course Registration System (MongoDB CRUD)
+// A college wants to manage student
+// course registrations using MongoDB.
+// =====================================================
+
+// 1) Create Database
+use CollegeDB
+
+// 2) Create Collection
+db.createCollection("Students")
+
+// Display Collections
+show collections
+
+// 3) Insert 5 Student Records using save()
+
+db.Students.save({
+    StudentID: 101,
+    Name: "Rahul Sharma",
+    Course: "Computer Engineering",
+    Year: 2,
+    Marks: 85
+})
+
+db.Students.save({
+    StudentID: 102,
+    Name: "Sneha Patil",
+    Course: "IT",
+    Year: 3,
+    Marks: 72
+})
+
+db.Students.save({
+    StudentID: 103,
+    Name: "Amit Joshi",
+    Course: "Mechanical Engineering",
+    Year: 2,
+    Marks: 68
+})
+
+db.Students.save({
+    StudentID: 104,
+    Name: "Priya Deshmukh",
+    Course: "Computer Engineering",
+    Year: 4,
+    Marks: 90
+})
+
+db.Students.save({
+    StudentID: 105,
+    Name: "Rohan Kulkarni",
+    Course: "IT",
+    Year: 1,
+    Marks: 58
+})
+
+// Display All Records
+db.Students.find().pretty()
+
+// =====================================================
+// 4) Read Operations
+// =====================================================
+
+// Display Students who belong to
+// "Computer Engineering" Course
+db.Students.find(
+    { Course: "Computer Engineering" }
+).pretty()
+
+// Display Students who have Marks > 70
+db.Students.find(
+    { Marks: { $gt: 70 } }
+).pretty()
+
+// =====================================================
+// 5) Update Operation
+// Update Course of StudentID = 102
+// =====================================================
+
+db.Students.updateOne(
+    { StudentID: 102 },
+    { $set: { Course: "Computer Engineering" } }
+)
+
+// Display Updated Record
+db.Students.find(
+    { StudentID: 102 }
+).pretty()
+
+// =====================================================
+// 6) Delete Operation
+// Delete StudentID = 105
+// =====================================================
+
+db.Students.deleteOne(
+    { StudentID: 105 }
+)
+
+// Display Records after Delete
+db.Students.find().pretty()
+
+// =====================================================
+// 7) Logical Operators
+// =====================================================
+
+// Students with Marks > 60
+// AND Course = "IT"
+db.Students.find({
+    $and: [
+        { Marks: { $gt: 60 } },
+        { Course: "IT" }
+    ]
+}).pretty()
+
+// Students in
+// "Computer Engineering" OR "IT"
+db.Students.find({
+    $or: [
+        { Course: "Computer Engineering" },
+        { Course: "IT" }
+    ]
+}).pretty()
+
+
+
+
+2...
+
+// =========================================
+// CREATE / USE DATABASE
+// =========================================
+use CollegeDB
+
+// =========================================
+// CREATE COLLECTION
+// =========================================
+db.createCollection("Students")
+
+// =========================================
+// INSERT STUDENT RECORDS
+// =========================================
+db.Students.insertMany([
+
+{
+    StudentID: 101,
+    Name: "Amit",
+    Course: "Computer Engineering",
+    Year: 2,
+    Marks: 85
+},
+
+{
+    StudentID: 102,
+    Name: "Sneha",
+    Course: "IT",
+    Year: 3,
+    Marks: 72
+},
+
+{
+    StudentID: 103,
+    Name: "Rahul",
+    Course: "Computer Engineering",
+    Year: 2,
+    Marks: 65
+},
+
+{
+    StudentID: 104,
+    Name: "Priya",
+    Course: "ENTC",
+    Year: 1,
+    Marks: 90
+},
+
+{
+    StudentID: 105,
+    Name: "Neha",
+    Course: "IT",
+    Year: 3,
+    Marks: 58
+}
+
+])
+
+// =========================================
+// DISPLAY ALL STUDENTS
+// =========================================
+db.Students.find()
+
+// =========================================
+// DISPLAY STUDENTS FROM
+// COMPUTER ENGINEERING
+// =========================================
+db.Students.find(
+{
+    Course:"Computer Engineering"
+}
+)
+
+// =========================================
+// DISPLAY STUDENTS WITH MARKS > 70
+// =========================================
+db.Students.find(
+{
+    Marks:{$gt:70}
+}
+)
+
+// =========================================
+// UPDATE COURSE OF STUDENT
+// =========================================
+db.Students.updateOne(
+    {StudentID:102},
+    {$set:{Course:"Computer Engineering"}}
+)
+
+// =========================================
+// DELETE STUDENT RECORD
+// =========================================
+db.Students.deleteOne(
+{
+    StudentID:105
+}
+)
+
+// =========================================
+// DISPLAY STUDENTS WITH
+// MARKS > 60 AND COURSE = IT
+// =========================================
+db.Students.find({
+    $and:[
+        {Marks:{$gt:60}},
+        {Course:"IT"}
+    ]
+})
+
+// =========================================
+// DISPLAY STUDENTS FROM
+// COMPUTER ENGINEERING OR IT
+// =========================================
+db.Students.find({
+    $or:[
+        {Course:"Computer Engineering"},
+        {Course:"IT"}
+    ]
+})
