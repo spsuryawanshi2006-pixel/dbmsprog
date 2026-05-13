@@ -1,0 +1,73 @@
+CREATE DATABASE CollegeDB;
+
+USE CollegeDB;
+
+CREATE TABLE Student (
+    StudentID INT PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    Age INT CHECK (Age >= 18),
+    Email VARCHAR(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE Course (
+    CourseID INT PRIMARY KEY,
+    CourseName VARCHAR(50) NOT NULL,
+    Credits INT
+);
+
+CREATE TABLE Enrollment (
+    EnrollmentID INT PRIMARY KEY,
+    StudentID INT,
+    CourseID INT,
+    
+    FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
+);
+
+INSERT INTO Student VALUES
+(1, 'Neha', 20, 'neha@gmail.com'),
+(2, 'Amit', 21, 'amit@gmail.com'),
+(3, 'Riya', 19, 'riya@gmail.com');
+
+SELECT 'STUDENT TABLE' AS INFO;
+SELECT * FROM Student;
+
+INSERT INTO Course VALUES
+(101, 'DBMS', 4),
+(102, 'Java', 3),
+(103, 'OS', 5);
+
+SELECT 'COURSE TABLE' AS INFO;
+SELECT * FROM Course;
+
+INSERT INTO Enrollment VALUES
+(1, 1, 101),
+(2, 2, 102),
+(3, 3, 103);
+
+SELECT 'ENROLLMENT TABLE' AS INFO;
+SELECT * FROM Enrollment;
+
+ALTER TABLE Student
+ADD PhoneNumber VARCHAR(15);
+
+SELECT 'AFTER ALTER STUDENT' AS INFO;
+DESC Student;
+
+ALTER TABLE Course
+ADD CONSTRAINT chk_credits CHECK (Credits BETWEEN 1 AND 5);
+
+RENAME TABLE Course TO Subject;
+
+SELECT 'AFTER RENAME' AS INFO;
+SELECT * FROM Subject;
+
+TRUNCATE TABLE Enrollment;
+
+SELECT 'AFTER TRUNCATE' AS INFO;
+SELECT * FROM Enrollment;
+
+DROP TABLE Enrollment;
+DROP TABLE Subject;
+
+SELECT 'TABLES DROPPED SUCCESSFULLY' AS INFO;
