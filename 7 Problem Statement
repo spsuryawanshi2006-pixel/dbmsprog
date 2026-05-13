@@ -1,0 +1,155 @@
+-- =========================================
+-- CREATE DATABASE
+-- =========================================
+CREATE DATABASE BookStoreDB;
+
+-- =========================================
+-- USE DATABASE
+-- =========================================
+USE BookStoreDB;
+
+-- =========================================
+-- CREATE AUTHORS TABLE
+-- =========================================
+CREATE TABLE Authors
+(
+    AuthorID INT PRIMARY KEY,
+    AuthorName VARCHAR(50),
+    Country VARCHAR(50)
+);
+
+-- =========================================
+-- CREATE BOOKS TABLE
+-- =========================================
+CREATE TABLE Books
+(
+    BookID INT PRIMARY KEY,
+    Title VARCHAR(50),
+    Price INT,
+    AuthorID INT,
+    
+    FOREIGN KEY (AuthorID)
+    REFERENCES Authors(AuthorID)
+);
+
+-- =========================================
+-- CREATE CUSTOMERS TABLE
+-- =========================================
+CREATE TABLE Customers
+(
+    CustomerID INT PRIMARY KEY,
+    CustomerName VARCHAR(50),
+    City VARCHAR(50)
+);
+
+-- =========================================
+-- CREATE BOOKORDERS TABLE
+-- =========================================
+CREATE TABLE BookOrders
+(
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,
+    BookID INT,
+    OrderDate DATE,
+    
+    FOREIGN KEY (CustomerID)
+    REFERENCES Customers(CustomerID),
+    
+    FOREIGN KEY (BookID)
+    REFERENCES Books(BookID)
+);
+
+-- =========================================
+-- INSERT DATA INTO AUTHORS TABLE
+-- =========================================
+INSERT INTO Authors VALUES
+(1,'Chetan Bhagat','India'),
+(2,'J.K. Rowling','UK'),
+(3,'Dan Brown','USA'),
+(4,'R.K. Narayan','India'),
+(5,'Paulo Coelho','Brazil');
+
+-- =========================================
+-- INSERT DATA INTO BOOKS TABLE
+-- =========================================
+INSERT INTO Books VALUES
+(101,'2 States',500,1),
+(102,'Harry Potter',800,2),
+(103,'Da Vinci Code',650,3),
+(104,'Malgudi Days',400,4),
+(105,'The Alchemist',550,5);
+
+-- =========================================
+-- INSERT DATA INTO CUSTOMERS TABLE
+-- =========================================
+INSERT INTO Customers VALUES
+(1,'Amit','Pune'),
+(2,'Sneha','Mumbai'),
+(3,'Rahul','Nagpur'),
+(4,'Priya','Nashik'),
+(5,'Neha','Akola');
+
+-- =========================================
+-- INSERT DATA INTO BOOKORDERS TABLE
+-- =========================================
+INSERT INTO BookOrders VALUES
+(1001,1,101,'2026-05-01'),
+(1002,2,102,'2026-05-02'),
+(1003,3,103,'2026-05-03'),
+(1004,4,104,'2026-05-04'),
+(1005,5,105,'2026-05-05');
+
+-- =========================================
+-- DISPLAY ALL TABLES
+-- =========================================
+SELECT 'AUTHORS TABLE' AS INFO;
+SELECT * FROM Authors;
+
+SELECT 'BOOKS TABLE' AS INFO;
+SELECT * FROM Books;
+
+SELECT 'CUSTOMERS TABLE' AS INFO;
+SELECT * FROM Customers;
+
+SELECT 'BOOKORDERS TABLE' AS INFO;
+SELECT * FROM BookOrders;
+
+-- =========================================
+-- CREATE VIEW : BOOKAUTHORVIEW
+-- =========================================
+CREATE VIEW BookAuthorView AS
+SELECT Books.BookID,
+       Books.Title,
+       Authors.AuthorName,
+       Books.Price
+FROM Books
+INNER JOIN Authors
+ON Books.AuthorID = Authors.AuthorID;
+
+-- =========================================
+-- CREATE VIEW : CUSTOMERORDERVIEW
+-- =========================================
+CREATE VIEW CustomerOrderView AS
+SELECT Customers.CustomerName,
+       Books.Title,
+       BookOrders.OrderDate
+FROM BookOrders
+INNER JOIN Customers
+ON BookOrders.CustomerID = Customers.CustomerID
+INNER JOIN Books
+ON BookOrders.BookID = Books.BookID;
+
+-- =========================================
+-- DISPLAY BOOKAUTHORVIEW
+-- =========================================
+SELECT * FROM BookAuthorView;
+
+-- =========================================
+-- DISPLAY CUSTOMERORDERVIEW
+-- =========================================
+SELECT * FROM CustomerOrderView;
+
+-- =========================================
+-- DROP VIEW
+-- =========================================
+DROP VIEW BookAuthorView;
