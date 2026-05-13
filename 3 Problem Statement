@@ -1,0 +1,84 @@
+CREATE DATABASE BankDB;
+
+USE BankDB;
+
+CREATE TABLE Account (
+    AccountID INT PRIMARY KEY,
+    CustomerName VARCHAR(50),
+    Balance DECIMAL(10,2),
+    AccountType VARCHAR(20)
+);
+
+INSERT INTO Account VALUES
+(1, 'Amit Sharma', 12000, 'Savings'),
+(2, 'Riya Patil', 60000, 'Current'),
+(3, 'Arjun Mehta', 800, 'Savings'),
+(4, 'Anita Desai', 45000, 'Savings'),
+(5, 'Vikram Rao', 70000, 'Current');
+
+SELECT 'ACCOUNT TABLE' AS INFO;
+SELECT * FROM Account;
+
+UPDATE Account
+SET Balance = Balance + (Balance * 0.10)
+WHERE AccountType = 'Savings';
+
+SELECT 'AFTER ADDING INTEREST' AS INFO;
+SELECT * FROM Account;
+
+UPDATE Account
+SET AccountType = 'Premium'
+WHERE Balance > 50000;
+
+SELECT 'AFTER ACCOUNT TYPE UPDATE' AS INFO;
+SELECT * FROM Account;
+
+DELETE FROM Account
+WHERE Balance < 1000;
+
+SELECT 'AFTER DELETE OPERATION' AS INFO;
+SELECT * FROM Account;
+
+SELECT 
+    AccountID,
+    CustomerName,
+    Balance,
+    (Balance + 500) AS BalanceAfter500
+FROM Account;
+
+SELECT * 
+FROM Account
+WHERE Balance BETWEEN 10000 AND 50000;
+
+SELECT * 
+FROM Account
+WHERE CustomerName LIKE 'A%';
+
+SELECT 
+    AccountID,
+    UPPER(CustomerName) AS Name_Uppercase,
+    Balance,
+    AccountType
+FROM Account;
+
+START TRANSACTION;
+
+UPDATE Account
+SET Balance = Balance - 5000
+WHERE AccountID = 2;
+
+UPDATE Account
+SET Balance = Balance + 5000
+WHERE AccountID = 1;
+
+SAVEPOINT AfterTransfer;
+
+UPDATE Account
+SET Balance = Balance - 200;
+
+ROLLBACK TO AfterTransfer;
+
+COMMIT;
+
+SELECT 'FINAL ACCOUNT TABLE' AS INFO;
+SELECT * FROM Account;
