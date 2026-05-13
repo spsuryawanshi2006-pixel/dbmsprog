@@ -1,0 +1,110 @@
+-- =========================================
+-- CREATE DATABASE
+-- =========================================
+CREATE DATABASE HospitalDB;
+
+-- =========================================
+-- USE DATABASE
+-- =========================================
+USE HospitalDB;
+
+-- =========================================
+-- CREATE BILLING TABLE
+-- =========================================
+CREATE TABLE Billing
+(
+    BillID INT PRIMARY KEY,
+    PatientName VARCHAR(50),
+    Department VARCHAR(50),
+    Amount INT,
+    DaysAdmitted INT
+);
+
+-- =========================================
+-- INSERT DATA INTO BILLING TABLE
+-- =========================================
+INSERT INTO Billing VALUES
+(1,'Amit','Cardiology',25000,5),
+(2,'Sneha','Orthopedics',18000,4),
+(3,'Rahul','General',8000,2),
+(4,'Priya','Neurology',30000,6),
+(5,'Karan','Cardiology',22000,3),
+(6,'Neha','Orthopedics',15000,5),
+(7,'Rohit','General',10000,1),
+(8,'Anjali','Neurology',35000,7);
+
+-- =========================================
+-- DISPLAY BILLING TABLE
+-- =========================================
+SELECT 'BILLING TABLE' AS INFO;
+
+SELECT * FROM Billing;
+
+-- =========================================
+-- TOTAL BILLING DEPARTMENT WISE
+-- =========================================
+SELECT Department,
+       SUM(Amount) AS Total_Billing
+FROM Billing
+GROUP BY Department;
+
+-- =========================================
+-- AVERAGE BILLING DEPARTMENT WISE
+-- =========================================
+SELECT Department,
+       AVG(Amount) AS Average_Billing
+FROM Billing
+GROUP BY Department;
+
+-- =========================================
+-- MAXIMUM AND MINIMUM BILL DEPARTMENT WISE
+-- =========================================
+SELECT Department,
+       MAX(Amount) AS Maximum_Bill,
+       MIN(Amount) AS Minimum_Bill
+FROM Billing
+GROUP BY Department;
+
+-- =========================================
+-- TOTAL PATIENTS DEPARTMENT WISE
+-- =========================================
+SELECT Department,
+       COUNT(*) AS Total_Patients
+FROM Billing
+GROUP BY Department;
+
+-- =========================================
+-- TOTAL DAYS ADMITTED DEPARTMENT WISE
+-- =========================================
+SELECT Department,
+       SUM(DaysAdmitted) AS Total_Days
+FROM Billing
+GROUP BY Department;
+
+-- =========================================
+-- DEPARTMENTS WITH TOTAL BILLING > 20000
+-- =========================================
+SELECT Department,
+       SUM(Amount) AS Total_Billing
+FROM Billing
+GROUP BY Department
+HAVING SUM(Amount) > 20000;
+
+-- =========================================
+-- DEPARTMENTS WITH AVERAGE STAY > 3 DAYS
+-- =========================================
+SELECT Department,
+       AVG(DaysAdmitted) AS Average_Stay
+FROM Billing
+GROUP BY Department
+HAVING AVG(DaysAdmitted) > 3;
+
+-- =========================================
+-- DEPARTMENT WITH HIGHEST BILLING
+-- =========================================
+SELECT Department,
+       SUM(Amount) AS Highest_Billing
+FROM Billing
+GROUP BY Department
+ORDER BY Highest_Billing DESC
+LIMIT 1;
