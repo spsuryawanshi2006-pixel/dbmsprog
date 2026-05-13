@@ -1,0 +1,126 @@
+-- =========================================
+-- CREATE DATABASE
+-- =========================================
+CREATE DATABASE BankingSystemDB;
+
+-- =========================================
+-- USE DATABASE
+-- =========================================
+USE BankingSystemDB;
+
+-- =========================================
+-- CREATE ACCOUNTS TABLE
+-- =========================================
+CREATE TABLE Accounts
+(
+    AccountID INT PRIMARY KEY,
+    CustomerName VARCHAR(50),
+    Balance INT
+);
+
+-- =========================================
+-- CREATE TRANSACTIONS TABLE
+-- =========================================
+CREATE TABLE Transactions
+(
+    TransactionID INT PRIMARY KEY,
+    TransactionType VARCHAR(20),
+    Amount INT,
+    AccountID INT,
+
+    FOREIGN KEY (AccountID)
+    REFERENCES Accounts(AccountID)
+);
+
+-- =========================================
+-- INSERT DATA INTO ACCOUNTS TABLE
+-- =========================================
+INSERT INTO Accounts VALUES
+(101,'Amit',5000),
+(102,'Sneha',8000),
+(103,'Rahul',6000),
+(104,'Priya',7000),
+(105,'Neha',9000);
+
+-- =========================================
+-- INSERT DATA INTO TRANSACTIONS TABLE
+-- =========================================
+INSERT INTO Transactions VALUES
+(1,'Deposit',2000,101),
+(2,'Withdrawal',1000,102),
+(3,'Deposit',1500,103),
+(4,'Withdrawal',2000,104),
+(5,'Deposit',3000,105);
+
+-- =========================================
+-- DISPLAY TABLES
+-- =========================================
+SELECT 'ACCOUNTS TABLE' AS INFO;
+SELECT * FROM Accounts;
+
+SELECT 'TRANSACTIONS TABLE' AS INFO;
+SELECT * FROM Transactions;
+
+-- =========================================
+-- CREATE TRIGGER
+-- =========================================
+DELIMITER //
+
+CREATE TRIGGER Check_Balance
+BEFORE INSERT
+ON Transactions
+FOR EACH ROW
+BEGIN
+
+    DECLARE current_balance INT;
+
+    -- GET CURRENT BALANCE
+    SELECT Balance
+    INTO current_balance
+    FROM Accounts
+    WHERE AccountID = NEW.AccountID;
+
+    -- CHECK FOR INSUFFICIENT BALANCE
+    IF NEW.TransactionType = 'Withdrawal'
+       AND NEW.Amount > current_balance THEN
+
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Insufficient Balance';
+
+    END IF;
+
+    -- UPDATE BALANCE AFTER WITHDRAWAL
+    IF NEW.TransactionType = 'Withdrawal' THEN
+
+        UPDATE Accounts
+        SET Balance = Balance - NEW.Amount
+        WHERE AccountID = NEW.AccountID;
+
+    -- UPDATE BALANCE AFTER DEPOSIT
+    ELSEIF NEW.TransactionType = 'Deposit' THEN
+
+        UPDATE Accounts
+        SET Balance = Balance + NEW.Amount
+        WHERE AccountID = NEW.AccountID;
+
+    END IF;
+
+END //
+
+DELIMITER ;
+
+-- =========================================
+-- INSERT NEW TRANSACTIONS
+-- =========================================
+INSERT INTO Transactions VALUES
+(6,'Withdrawal',2000,101);
+
+INSERT INTO Transactions VALUES
+(7,'Withdrawal',3000,102);
+
+-- =========================================
+-- DISPLAY UPDATED ACCOUNTS TABLE
+-- =========================================
+SELECT 'UPDATED ACCOUNTS TABLE' AS INFO;
+
+SELECT * FROM Accounts;
