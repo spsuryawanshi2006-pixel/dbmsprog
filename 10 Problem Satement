@@ -1,0 +1,118 @@
+-- =========================================
+-- CREATE DATABASE
+-- =========================================
+CREATE DATABASE LibraryDB;
+
+-- =========================================
+-- USE DATABASE
+-- =========================================
+USE LibraryDB;
+
+-- =========================================
+-- CREATE BOOKS TABLE
+-- =========================================
+CREATE TABLE Books
+(
+    BookID INT PRIMARY KEY,
+    BookTitle VARCHAR(50),
+    Author VARCHAR(50),
+    AvailableCopies INT
+);
+
+-- =========================================
+-- CREATE ISSUEDBOOKS TABLE
+-- =========================================
+CREATE TABLE IssuedBooks
+(
+    IssueID INT PRIMARY KEY,
+    StudentName VARCHAR(50),
+    IssueDate DATE,
+    BookID INT,
+
+    FOREIGN KEY (BookID)
+    REFERENCES Books(BookID)
+);
+
+-- =========================================
+-- INSERT DATA INTO BOOKS TABLE
+-- =========================================
+INSERT INTO Books VALUES
+(101,'DBMS','Korth',5),
+(102,'Operating System','Galvin',4),
+(103,'Computer Network','Tanenbaum',6),
+(104,'Java Programming','Herbert Schildt',3),
+(105,'Python Basics','Guido',7);
+
+-- =========================================
+-- INSERT DATA INTO ISSUEDBOOKS TABLE
+-- =========================================
+INSERT INTO IssuedBooks VALUES
+(1,'Amit','2026-05-01',101),
+(2,'Sneha','2026-05-02',102),
+(3,'Rahul','2026-05-03',103),
+(4,'Priya','2026-05-04',104),
+(5,'Neha','2026-05-05',105);
+
+-- =========================================
+-- DISPLAY TABLES
+-- =========================================
+SELECT 'BOOKS TABLE' AS INFO;
+SELECT * FROM Books;
+
+SELECT 'ISSUEDBOOKS TABLE' AS INFO;
+SELECT * FROM IssuedBooks;
+
+-- =========================================
+-- CREATE STORED PROCEDURE USING CURSOR
+-- =========================================
+DELIMITER //
+
+CREATE PROCEDURE DisplayIssuedBooks()
+BEGIN
+
+    DECLARE done INT DEFAULT 0;
+    DECLARE b_id INT;
+    DECLARE s_name VARCHAR(50);
+    DECLARE i_date DATE;
+
+    -- CURSOR DECLARATION
+    DECLARE book_cursor CURSOR FOR
+    SELECT BookID, StudentName, IssueDate
+    FROM IssuedBooks;
+
+    -- HANDLER DECLARATION
+    DECLARE CONTINUE HANDLER FOR NOT FOUND
+    SET done = 1;
+
+    -- OPEN CURSOR
+    OPEN book_cursor;
+
+    read_loop: LOOP
+
+        -- FETCH RECORD
+        FETCH book_cursor
+        INTO b_id, s_name, i_date;
+
+        -- EXIT CONDITION
+        IF done = 1 THEN
+            LEAVE read_loop;
+        END IF;
+
+        -- DISPLAY RECORD
+        SELECT b_id AS BookID,
+               s_name AS StudentName,
+               i_date AS IssueDate;
+
+    END LOOP;
+
+    -- CLOSE CURSOR
+    CLOSE book_cursor;
+
+END //
+
+DELIMITER ;
+
+-- =========================================
+-- CALL PROCEDURE
+-- =========================================
+CALL DisplayIssuedBooks();
