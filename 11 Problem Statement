@@ -1,0 +1,92 @@
+-- =========================================
+-- CREATE DATABASE
+-- =========================================
+CREATE DATABASE ShoppingDB;
+
+-- =========================================
+-- USE DATABASE
+-- =========================================
+USE ShoppingDB;
+
+-- =========================================
+-- CREATE PRODUCTS TABLE
+-- =========================================
+CREATE TABLE Products
+(
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(50),
+    Price INT
+);
+
+-- =========================================
+-- CREATE ORDERS TABLE
+-- =========================================
+CREATE TABLE Orders
+(
+    OrderID INT PRIMARY KEY,
+    Quantity INT,
+    OrderDate DATE,
+    ProductID INT,
+
+    FOREIGN KEY (ProductID)
+    REFERENCES Products(ProductID)
+);
+
+-- =========================================
+-- INSERT DATA INTO PRODUCTS TABLE
+-- =========================================
+INSERT INTO Products VALUES
+(101,'Laptop',55000),
+(102,'Mobile',20000),
+(103,'Headphones',1500),
+(104,'Keyboard',2500),
+(105,'Mouse',1200);
+
+-- =========================================
+-- INSERT DATA INTO ORDERS TABLE
+-- =========================================
+INSERT INTO Orders VALUES
+(1,2,'2026-05-01',101),
+(2,3,'2026-05-02',102),
+(3,5,'2026-05-03',103),
+(4,4,'2026-05-04',104),
+(5,6,'2026-05-05',105);
+
+-- =========================================
+-- DISPLAY TABLES
+-- =========================================
+SELECT 'PRODUCTS TABLE' AS INFO;
+SELECT * FROM Products;
+
+SELECT 'ORDERS TABLE' AS INFO;
+SELECT * FROM Orders;
+
+-- =========================================
+-- CREATE FUNCTION TO CALCULATE
+-- TOTAL REVENUE
+-- =========================================
+DELIMITER //
+
+CREATE FUNCTION TotalRevenue()
+RETURNS INT
+DETERMINISTIC
+BEGIN
+
+    DECLARE revenue INT;
+
+    SELECT SUM(Orders.Quantity * Products.Price)
+    INTO revenue
+    FROM Orders
+    INNER JOIN Products
+    ON Orders.ProductID = Products.ProductID;
+
+    RETURN revenue;
+
+END //
+
+DELIMITER ;
+
+-- =========================================
+-- CALL FUNCTION
+-- =========================================
+SELECT TotalRevenue() AS Total_Revenue;
