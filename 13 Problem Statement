@@ -1,0 +1,83 @@
+-- =========================================
+-- CREATE DATABASE
+-- =========================================
+CREATE DATABASE StudentMarksDB;
+
+-- =========================================
+-- USE DATABASE
+-- =========================================
+USE StudentMarksDB;
+
+-- =========================================
+-- CREATE STUDENTMARKS TABLE
+-- =========================================
+CREATE TABLE StudentMarks
+(
+    StudentID INT PRIMARY KEY,
+    StudentName VARCHAR(50),
+    Subject VARCHAR(50),
+    Marks INT
+);
+
+-- =========================================
+-- INSERT INITIAL DATA
+-- =========================================
+INSERT INTO StudentMarks VALUES
+(101,'Amit','DBMS',85),
+(102,'Sneha','OS',78),
+(103,'Rahul','CN',67),
+(104,'Priya','Java',92),
+(105,'Neha','Python',88);
+
+-- =========================================
+-- DISPLAY STUDENTMARKS TABLE
+-- =========================================
+SELECT 'STUDENTMARKS TABLE' AS INFO;
+SELECT * FROM StudentMarks;
+
+-- =========================================
+-- CREATE TRIGGERS TO VALIDATE MARKS
+-- =========================================
+DELIMITER //
+
+-- BEFORE INSERT TRIGGER
+CREATE TRIGGER Check_Marks_Insert
+BEFORE INSERT
+ON StudentMarks
+FOR EACH ROW
+BEGIN
+
+    IF NEW.Marks < 0 OR NEW.Marks > 100 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Marks should be between 0 and 100';
+    END IF;
+
+END //
+
+-- BEFORE UPDATE TRIGGER
+CREATE TRIGGER Check_Marks_Update
+BEFORE UPDATE
+ON StudentMarks
+FOR EACH ROW
+BEGIN
+
+    IF NEW.Marks < 0 OR NEW.Marks > 100 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Marks should be between 0 and 100';
+    END IF;
+
+END //
+
+DELIMITER ;
+
+-- =========================================
+-- TEST INSERT (VALID DATA)
+-- =========================================
+INSERT INTO StudentMarks VALUES
+(106,'Karan','AI',95);
+
+-- =========================================
+-- DISPLAY UPDATED TABLE
+-- =========================================
+SELECT 'UPDATED STUDENTMARKS TABLE' AS INFO;
+SELECT * FROM StudentMarks;
