@@ -1,0 +1,131 @@
+-- =========================================
+-- CREATE DATABASE
+-- =========================================
+CREATE DATABASE CollegeManagementDB;
+
+-- =========================================
+-- USE DATABASE
+-- =========================================
+USE CollegeManagementDB;
+
+-- =========================================
+-- CREATE STUDENT TABLE
+-- =========================================
+CREATE TABLE Student
+(
+    StudentID INT PRIMARY KEY,
+    StudentName VARCHAR(50),
+    Department VARCHAR(50)
+);
+
+-- =========================================
+-- CREATE SUBJECT TABLE
+-- =========================================
+CREATE TABLE Subject
+(
+    SubjectID INT PRIMARY KEY,
+    SubjectName VARCHAR(50)
+);
+
+-- =========================================
+-- CREATE MARKS TABLE
+-- =========================================
+CREATE TABLE Marks
+(
+    StudentID INT,
+    SubjectID INT,
+    MarksObtained INT,
+
+    FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+    FOREIGN KEY (SubjectID) REFERENCES Subject(SubjectID)
+);
+
+-- =========================================
+-- INSERT DATA INTO STUDENT TABLE
+-- =========================================
+INSERT INTO Student VALUES
+(1,'Amit','Computer'),
+(2,'Sneha','IT'),
+(3,'Rahul','ENTC'),
+(4,'Priya','Computer'),
+(5,'Neha','Mechanical');
+
+-- =========================================
+-- INSERT DATA INTO SUBJECT TABLE
+-- =========================================
+INSERT INTO Subject VALUES
+(101,'DBMS'),
+(102,'OS'),
+(103,'CN'),
+(104,'Java'),
+(105,'Python');
+
+-- =========================================
+-- INSERT DATA INTO MARKS TABLE
+-- =========================================
+INSERT INTO Marks VALUES
+(1,101,85),
+(1,102,78),
+(2,101,90),
+(3,103,70),
+(4,104,88),
+(5,105,75);
+
+-- =========================================
+-- DISPLAY ALL TABLES
+-- =========================================
+SELECT 'STUDENT TABLE' AS INFO;
+SELECT * FROM Student;
+
+SELECT 'SUBJECT TABLE' AS INFO;
+SELECT * FROM Subject;
+
+SELECT 'MARKS TABLE' AS INFO;
+SELECT * FROM Marks;
+
+-- =========================================
+-- INNER JOIN
+-- DISPLAY STUDENT NAME, SUBJECT NAME,
+-- AND MARKS OBTAINED
+-- =========================================
+SELECT Student.StudentName,
+       Subject.SubjectName,
+       Marks.MarksObtained
+FROM Marks
+INNER JOIN Student
+ON Marks.StudentID = Student.StudentID
+INNER JOIN Subject
+ON Marks.SubjectID = Subject.SubjectID;
+
+-- =========================================
+-- LEFT JOIN
+-- DISPLAY ALL STUDENTS WITH MARKS
+-- =========================================
+SELECT Student.StudentName,
+       Marks.MarksObtained
+FROM Student
+LEFT JOIN Marks
+ON Student.StudentID = Marks.StudentID;
+
+-- =========================================
+-- RIGHT JOIN
+-- DISPLAY SUBJECTS WITH STUDENT DETAILS
+-- =========================================
+SELECT Subject.SubjectName,
+       Student.StudentName,
+       Marks.MarksObtained
+FROM Marks
+RIGHT JOIN Subject
+ON Marks.SubjectID = Subject.SubjectID
+LEFT JOIN Student
+ON Marks.StudentID = Student.StudentID;
+
+-- =========================================
+-- CROSS JOIN
+-- DISPLAY ALL POSSIBLE COMBINATIONS
+-- OF STUDENTS AND SUBJECTS
+-- =========================================
+SELECT Student.StudentName,
+       Subject.SubjectName
+FROM Student
+CROSS JOIN Subject;
